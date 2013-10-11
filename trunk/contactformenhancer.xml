@@ -13,8 +13,12 @@
 	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
 	<authorEmail></authorEmail>
 	<authorUrl></authorUrl>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	<description>PLG_SYSTEM_CONTACTFORMENHANCER_DESCR</description>
+
+	<updateservers>
+		<server type="extension" priority="2" name="Contact Form Enhancer's Updates">http://joomlacode.org/gf/project/contactform_enh/scmsvn/?action=browse&amp;path=%2F%2Acheckout%2A%2Fupdateserver%2Fplg_contactformenhancer_update.xml&amp;content-type=text%2Fplain</server>
+	</updateservers>
 
 	<scriptfile>contactformenhancer.script.php</scriptfile>
 	
