@@ -93,13 +93,10 @@ class plgSystemcontactformenhancerInstallerScript {
 
 			?>
 			<div style="padding:10px; border: 1px solid green; margin:20px; background-color:#E0FFD0;">
-				<h2><?php echo JText::_('Contact Form Enhancer Plugin Installation Status'); ?></h2>
+				<strong><?php echo JText::_("PLG_SYSTEM_CONTACTFORMENHANCER_PLUGIN_INSTALLATION_SUCCESSFUL"); ?></strong>
 				<br />
 				<br />
-				<strong>Contact Form Enhancer plugin installation successful!</strong>
-				<br />
-				<br />
-				You need to <a href="index.php?option=com_plugins&task=plugin.edit&extension_id=<?php echo $plugin_id; ?>"><strong>enable and configure the plugin in Plug-in manager.</strong></a>
+				<?php echo JText::sprintf(PLG_SYSTEM_CONTACTFORMENHANCER_YOU_NEED_CONFIGURE_PLUGIN , $plugin_id); ?>
 			</div>
 			<?php
 		} 		
