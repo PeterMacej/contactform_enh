@@ -2,7 +2,7 @@
 
 /**
  * This file is copied from components/com_contact/controllers/contact.php
- * Only the _sendEmail function is modified and some helper functions added
+ * Only the submit and _sendEmail functions are modified and some helper functions added
  * after it.
  *  
  * Created on October, 2013
@@ -33,6 +33,13 @@ class ContactControllerContact extends JControllerForm
 	{
 		return parent::getModel($name, $prefix, array('ignore_request' => false));
 	}
+
+
+/**
+ *******************************************************************************************
+ * This is the modified part of the original components/com_contact/controllers/contact.php file
+ * used in contactformenhancer plugin. 
+ */
 
 	public function submit()
 	{
@@ -141,6 +148,15 @@ class ContactControllerContact extends JControllerForm
 		// Redirect if it is set in the parameters, otherwise redirect back to where we came from
 		if ($contact->params->get('redirect'))
 		{
+			// get contactformenhancer plugin parameters
+	    $plugin = JPluginHelper::getPlugin('system', 'contactformenhancer');
+	    $pluginParams = new JRegistry();
+	    $pluginParams->loadString($plugin->params);
+			// supress "Thank you" message
+			if ($pluginParams->get('supressThankYouMessage', '0') == '1') {
+				$msg = null;
+			}	    
+
 			$this->setRedirect($contact->params->get('redirect'), $msg);
 		}
 		else
@@ -152,12 +168,6 @@ class ContactControllerContact extends JControllerForm
 	}
 
 
-
-/**
- *******************************************************************************************
- * This is modified part of the original components/com_contact/controllers/contact.php file
- * used in contactformenhancer plugin. 
- */
 
 	private function _sendEmail($data, $contact)
 	{

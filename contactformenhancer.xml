@@ -13,7 +13,7 @@
 	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
 	<authorEmail></authorEmail>
 	<authorUrl></authorUrl>
-	<version>1.0.1</version>
+	<version>1.0.2</version>
 	<description>PLG_SYSTEM_CONTACTFORMENHANCER_DESCR</description>
 
 	<updateservers>
@@ -38,6 +38,15 @@
 					default="1" 
 					label="PLG_SYSTEM_CONTACTFORMENHANCER_ALLOW_BACKSLASH"
 					description="PLG_SYSTEM_CONTACTFORMENHANCER_ALLOW_BACKSLASH_DESCR">
+					<option value="1">PLG_SYSTEM_CONTACTFORMENHANCER_YES</option>
+					<option value="0">PLG_SYSTEM_CONTACTFORMENHANCER_NO</option>
+				</field>
+
+				<field name="supressThankYouMessage"
+					type="list"
+					default="0" 
+					label="PLG_SYSTEM_CONTACTFORMENHANCER_SUPRESS_THANKYOU"
+					description="PLG_SYSTEM_CONTACTFORMENHANCER_SUPRESS_THANKYOU_DESCR">
 					<option value="1">PLG_SYSTEM_CONTACTFORMENHANCER_YES</option>
 					<option value="0">PLG_SYSTEM_CONTACTFORMENHANCER_NO</option>
 				</field>
