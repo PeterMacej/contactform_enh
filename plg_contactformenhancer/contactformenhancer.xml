@@ -8,16 +8,16 @@
 <extension type="plugin" version="3.0" group="system" method="upgrade">
 	<name>PLG_SYSTEM_CONTACTFORMENHANCER</name>
 	<author>Peter Macej (Helixoft)</author>
-	<creationDate>October 2013</creationDate>
-	<copyright>Copyright (c) 2013 Peter Macej. All rights reserved.</copyright>
+	<creationDate>February 2015</creationDate>
+	<copyright>Copyright (c) 2015 Peter Macej. All rights reserved.</copyright>
 	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
 	<authorEmail></authorEmail>
 	<authorUrl></authorUrl>
-	<version>1.0.2</version>
+	<version>1.0.3</version>
 	<description>PLG_SYSTEM_CONTACTFORMENHANCER_DESCR</description>
 
 	<updateservers>
-		<server type="extension" priority="2" name="Contact Form Enhancer's Updates">http://joomlacode.org/gf/project/contactform_enh/scmsvn/?action=browse&amp;path=%2F%2Acheckout%2A%2Fupdateserver%2Fplg_contactformenhancer_update.xml&amp;content-type=text%2Fplain</server>
+		<server type="extension" priority="2" name="Contact Form Enhancer's Updates">https://github.com/PeterMacej/contactform_enh/raw/master/server/plg_contactformenhancer_update.xml</server>
 	</updateservers>
 
 	<scriptfile>contactformenhancer.script.php</scriptfile>
