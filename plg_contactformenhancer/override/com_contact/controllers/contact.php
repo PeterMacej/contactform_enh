@@ -6,10 +6,11 @@
  * after it.
  *  
  * Created on October, 2013
+ * Modified on April, 2016
  *
  * @package plg_system_contactformenhancer
  * @author Peter Macej
- * @copyright Copyright (c) 2013 Peter Macej. All rights reserved.
+ * @copyright Copyright (c) 2016 Peter Macej. All rights reserved.
  * @license		GNU General Public License version 2 or later; see LICENSE.txt
  */  
 
@@ -24,6 +25,8 @@
 defined('_JEXEC') or die;
 
 /**
+ * Controller for single contact view.
+ *
  * @package     Joomla.Site
  * @subpackage  com_contact
  */
@@ -41,11 +44,18 @@ class ContactControllerContact extends JControllerForm
  * used in contactformenhancer plugin. 
  */
 
+
+  /**
+	 * Method to submit the contact form and send an email.
+	 *
+	 * @return  boolean  True on success sending the email. False on failure.
+	 *
+	 * @since   1.5.19
+	 */
 	public function submit()
 	{
 		// Check for request forgeries.
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-
 		$app    = JFactory::getApplication();
 		$model  = $this->getModel('contact');
 		$params = JComponentHelper::getParams('com_contact');
@@ -80,6 +90,7 @@ class ContactControllerContact extends JControllerForm
 
 		// Validate the posted data.
 		$form = $model->getForm();
+
 		if (!$form)
 		{
 			JError::raiseError(500, $model->getError());
@@ -90,6 +101,7 @@ class ContactControllerContact extends JControllerForm
 
 		if ($validate === false)
 		{
+    
 			// Get the validation messages.
 			$errors	= $model->getErrors();
 			// Push up to three validation messages out to the user.
@@ -129,7 +141,7 @@ class ContactControllerContact extends JControllerForm
 		$sent = false;
 		if (!$params->get('custom_reply'))
 		{
-			$sent = $this->_sendEmail($data, $contact);
+			$sent = $this->_sendEmail($data, $contact, $params->get('show_email_copy'));
 		}
 
 		// Set the success message if it was a success
@@ -168,10 +180,19 @@ class ContactControllerContact extends JControllerForm
 	}
 
 
-
-	private function _sendEmail($data, $contact)
+  /**
+	 *
+	 * @param   array      $data                  The data to send in the email.
+	 * @param   stdClass   $contact               The user information to send the email to
+	 * @param   boolean    $copy_email_activated  True to send a copy of the email to the user.
+	 *
+	 * @return  boolean  True on success sending the email, false on failure.
+	 *
+	 * @since   1.6.4
+	 */
+	private function _sendEmail($data, $contact, $copy_email_activated)
 	{
-			// get contactformenhancer plugin parameters
+  			// get contactformenhancer plugin parameters
 	    $plugin = JPluginHelper::getPlugin('system', 'contactformenhancer');
 	    $pluginParams = new JRegistry();
 	    $pluginParams->loadString($plugin->params);
@@ -182,12 +203,12 @@ class ContactControllerContact extends JControllerForm
 				$contact_user = JUser::getInstance($contact->user_id);
 				$contact->email_to = $contact_user->get('email');
 			}
-			$mailfrom	= $app->getCfg('mailfrom');
-			$fromname	= $app->getCfg('fromname');
-			$sitename	= $app->getCfg('sitename');
+			$mailfrom	= $app->get('mailfrom');
+			$fromname	= $app->get('fromname');
+			$sitename	= $app->get('sitename');
 
 			$name		= $data['contact_name'];
-			$email		= JstringPunycode::emailToPunycode($data['contact_email']);
+			$email		= JStringPunycode::emailToPunycode($data['contact_email']);
 			$subject	= $data['contact_subject'];
 			$body		= $data['contact_message'];
 
@@ -203,7 +224,7 @@ class ContactControllerContact extends JControllerForm
 				$body	= $prefix."\n".$name.' <'.$email.'>'."\r\n\r\n".stripslashes($body);
 
 				$mail->addRecipient($contact->email_to);
-				$mail->addReplyTo(array($email, $name));
+				$mail->addReplyTo($email, $name);
 				$mail->setSender(array($mailfrom, $fromname));
 				$mail->setSubject($sitename.': '.$subject);
 				$mail->setBody($body);
@@ -217,7 +238,9 @@ class ContactControllerContact extends JControllerForm
 				$cReplyName = $this->processVariables($cReplyName, $name, $email, $subject, $body);
 				$cReplyEmail = $pluginParams->get("customReplytoEmail", "");
 				$cReplyEmail = $this->processVariables($cReplyEmail, $name, $email, $subject, $body);
-				$mail->addReplyTo(array($cReplyEmail, $cReplyName));
+        if (trim($cReplyEmail) !== '') {
+				  $mail->addReplyTo($cReplyEmail, $cReplyName);
+        }
 
 				$cFromName = $pluginParams->get("customFromName", "%FORM_NAME%");
 				$cFromName = $this->processVariables($cFromName, $name, $email, $subject, $body);
@@ -237,9 +260,8 @@ class ContactControllerContact extends JControllerForm
 
 			//If we are supposed to copy the sender, do so.
 
-			// check whether email copy function activated
-			if ( array_key_exists('contact_email_copy', $data)  )
-			{
+      // Check whether email copy function activated
+			if ($copy_email_activated == true && !empty($data['contact_email_copy']))			{
 				$copytext		= JText::sprintf('COM_CONTACT_COPYTEXT_OF', $contact->name, $sitename);
 				$copytext		.= "\r\n\r\n".$body;
 				$copysubject	= JText::sprintf('COM_CONTACT_COPYSUBJECT_OF', $subject);
@@ -248,14 +270,14 @@ class ContactControllerContact extends JControllerForm
 				if ($pluginParams->get('sendCustomCopyEmail', '0') == '0') {
 					// default original format
 					$mail->addRecipient($email);
-					$mail->addReplyTo(array($email, $name));
+					$mail->addReplyTo($email, $name);
 					$mail->setSender(array($mailfrom, $fromname));
 					$mail->setSubject($copysubject);
 					$mail->setBody($copytext);
 				} else {
 					// custom format
 					$mail->addRecipient($email);
-					$mail->addReplyTo(array($email, $name));
+					$mail->addReplyTo($email, $name);
 					$mail->setSender(array($mailfrom, $fromname));
 
 					$cSubject = $pluginParams->get("customCopySubject", "Copy of: %FORM_SUBJECT%");
@@ -275,9 +297,9 @@ class ContactControllerContact extends JControllerForm
 	
 	private function processVariables($text, $name, $email, $subject, $body) {
 		$app		= JFactory::getApplication();
-		$mailfrom	= $app->getCfg('mailfrom');
-		$fromname	= $app->getCfg('fromname');
-		$sitename	= $app->getCfg('sitename');
+		$mailfrom	= $app->get('mailfrom');
+		$fromname	= $app->get('fromname');
+		$sitename	= $app->get('sitename');
 		$siteurl = JUri::base();
 
 		$text = str_replace("%FORM_SUBJECT%", $subject, $text);
