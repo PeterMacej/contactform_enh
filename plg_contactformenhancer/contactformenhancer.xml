@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 /**
- * @copyright	Copyright (c) 2013 Contact Form Enhancer. All rights reserved.
+ * @copyright	Copyright (c) 2016 Contact Form Enhancer. All rights reserved.
  * @license		GNU General Public License version 2 or later; see LICENSE.txt
  */
 -->
 <extension type="plugin" version="3.0" group="system" method="upgrade">
 	<name>PLG_SYSTEM_CONTACTFORMENHANCER</name>
 	<author>Peter Macej (Helixoft)</author>
-	<creationDate>February 2015</creationDate>
-	<copyright>Copyright (c) 2015 Peter Macej. All rights reserved.</copyright>
+	<creationDate>April 2016</creationDate>
+	<copyright>Copyright (c) 2016 Peter Macej. All rights reserved.</copyright>
 	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
 	<authorEmail></authorEmail>
 	<authorUrl>http://petermacej.github.io/contactform_enh/</authorUrl>
-	<version>1.0.3</version>
+	<version>1.0.4</version>
 	<description>PLG_SYSTEM_CONTACTFORMENHANCER_DESCR</description>
 
 	<updateservers>
