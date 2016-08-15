@@ -8,12 +8,12 @@
 <extension type="plugin" version="3.0" group="system" method="upgrade">
 	<name>PLG_SYSTEM_CONTACTFORMENHANCER</name>
 	<author>Peter Macej (Helixoft)</author>
-	<creationDate>April 2016</creationDate>
+	<creationDate>August 2016</creationDate>
 	<copyright>Copyright (c) 2016 Peter Macej. All rights reserved.</copyright>
 	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
 	<authorEmail></authorEmail>
 	<authorUrl>http://petermacej.github.io/contactform_enh/</authorUrl>
-	<version>1.0.4</version>
+	<version>1.0.5</version>
 	<description>PLG_SYSTEM_CONTACTFORMENHANCER_DESCR</description>
 
 	<updateservers>
