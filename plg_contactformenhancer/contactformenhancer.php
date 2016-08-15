@@ -1,10 +1,11 @@
 <?php
 /**
  * Created on October, 2013
+ * Updated on August, 2016
  *
  * @package plg_system_contactformenhancer
  * @author Peter Macej
- * @copyright Copyright (c) 2013 Peter Macej. All rights reserved.
+ * @copyright Copyright (c) 2016 Peter Macej. All rights reserved.
  * @license		GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -37,7 +38,7 @@ class plgSystemContactFormEnhancer extends JPlugin {
 		$app = JFactory::getApplication();
 		if('com_contact' == JRequest::getCMD('option') && !$app->isAdmin()) {
 			// load modified contact controller
-			require_once(dirname(__FILE__) . DS . 'override' . DS . 'com_contact' . DS . 'controllers' . DS . 'contact.php');
+			require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'override' . DIRECTORY_SEPARATOR . 'com_contact' . DIRECTORY_SEPARATOR . 'controllers' . DIRECTORY_SEPARATOR . 'contact.php');
 		}
 	} 
 }
