@@ -142,6 +142,7 @@ class ContactControllerContact extends JControllerForm
 		if (!$params->get('custom_reply'))
 		{
 			$sent = $this->_sendEmail($data, $contact, $params->get('show_email_copy'));
+			
 		}
 
 		// Set the success message if it was a success
@@ -212,17 +213,17 @@ class ContactControllerContact extends JControllerForm
 			$subject	= $data['contact_subject'];
 			$body		= $data['contact_message'];
 
+			echo "das ist ein Test";
 			// Prepare email body
 			if ($pluginParams->get('allowBackslash', '1') == '1') {
 				$body = str_replace("\\", "\\\\", $body);
 			}
-
+			
 			$mail = JFactory::getMailer();
 			if ($pluginParams->get('sendCustomEmail', '0') == '0') {
 				// default original format
 				$prefix = JText::sprintf('COM_CONTACT_ENQUIRY_TEXT', JUri::base());
 				$body	= $prefix."\n".$name.' <'.$email.'>'."\r\n\r\n".stripslashes($body);
-
 				$mail->addRecipient($contact->email_to);
 				$mail->addReplyTo($email, $name);
 				$mail->setSender(array($mailfrom, $fromname));
@@ -231,7 +232,6 @@ class ContactControllerContact extends JControllerForm
 			} else {
 				// custom format
 				$body	= stripslashes($body);
-				
 				$mail->addRecipient($contact->email_to);
 
 				$cReplyName = $pluginParams->get("customReplytoName", "");
@@ -260,8 +260,11 @@ class ContactControllerContact extends JControllerForm
 
 			//If we are supposed to copy the sender, do so.
 
-      // Check whether email copy function activated
-			if ($copy_email_activated == true && !empty($data['contact_email_copy']))			{
+
+      // Check whether email copy function activated}
+			if ( (($copy_email_activated == true) && !empty($data['contact_email_copy']))	||  ($pluginParams->get('sendCustomCopyEmail_always', '0') == '1') )		{
+
+				
 				$copytext		= JText::sprintf('COM_CONTACT_COPYTEXT_OF', $contact->name, $sitename);
 				$copytext		.= "\r\n\r\n".$body;
 				$copysubject	= JText::sprintf('COM_CONTACT_COPYSUBJECT_OF', $subject);
@@ -290,6 +293,9 @@ class ContactControllerContact extends JControllerForm
 				}
 				$sent = $mail->Send();
 			}
+			
+		
+		
 
 			return $sent;
 	}
