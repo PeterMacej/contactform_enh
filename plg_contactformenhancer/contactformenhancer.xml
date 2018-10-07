@@ -8,12 +8,12 @@
 <extension type="plugin" version="3.0" group="system" method="upgrade">
 	<name>PLG_SYSTEM_CONTACTFORMENHANCER</name>
 	<author>Peter Macej (Helixoft)</author>
-	<creationDate>August 2016</creationDate>
-	<copyright>Copyright (c) 2016 Peter Macej. All rights reserved.</copyright>
+	<creationDate>October 2018</creationDate>
+	<copyright>Copyright (c) 2018 Peter Macej. All rights reserved.</copyright>
 	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
 	<authorEmail></authorEmail>
 	<authorUrl>http://petermacej.github.io/contactform_enh/</authorUrl>
-	<version>1.0.5</version>
+	<version>1.1</version>
 	<description>PLG_SYSTEM_CONTACTFORMENHANCER_DESCR</description>
 
 	<updateservers>
@@ -34,7 +34,8 @@
 			<fieldset name="basic">
 
 				<field name="allowBackslash"
-					type="list"
+					type="radio"
+					class="btn-group btn-group-yesno"
 					default="1" 
 					label="PLG_SYSTEM_CONTACTFORMENHANCER_ALLOW_BACKSLASH"
 					description="PLG_SYSTEM_CONTACTFORMENHANCER_ALLOW_BACKSLASH_DESCR">
@@ -43,7 +44,8 @@
 				</field>
 
 				<field name="supressThankYouMessage"
-					type="list"
+					type="radio"
+					class="btn-group btn-group-yesno"
 					default="0" 
 					label="PLG_SYSTEM_CONTACTFORMENHANCER_SUPRESS_THANKYOU"
 					description="PLG_SYSTEM_CONTACTFORMENHANCER_SUPRESS_THANKYOU_DESCR">
@@ -52,6 +54,7 @@
 				</field>
 
 			
+				<!-- Contact email settings -->
 				<field type="spacer"
 					 name="contactMailSpacer"
 					 label="PLG_SYSTEM_CONTACTFORMENHANCER_EMAIL_GROUP"
@@ -113,6 +116,7 @@
 				/>
 
 
+				<!-- Copy email settings -->
 				<field type="spacer"
 					 name="copyMailSpacer"
 					 label="PLG_SYSTEM_CONTACTFORMENHANCER_COPY_EMAIL_GROUP"
@@ -145,6 +149,57 @@
 					filter="raw"
 				/>
 
+
+				<!-- Auto responder settings -->
+				<field type="spacer"
+					 name="autoReplySpacer"
+					 label="PLG_SYSTEM_CONTACTFORMENHANCER_AUTO_REPLY_GROUP"
+				/>
+				
+				<field name="autoReplyEnabled"
+					type="radio"
+					class="btn-group btn-group-yesno"
+					default="0" 
+					label="PLG_SYSTEM_CONTACTFORMENHANCER_AUTO_REPLY_ENABLED"
+					description="PLG_SYSTEM_CONTACTFORMENHANCER_EMAIL_ENABLED_DESCR">
+					<option value="0">PLG_SYSTEM_CONTACTFORMENHANCER_NO</option>
+					<option value="1">PLG_SYSTEM_CONTACTFORMENHANCER_YES</option>
+				</field>
+				
+				<field name="autoReplyFromName"
+					type="text"
+					default=""
+					label="PLG_SYSTEM_CONTACTFORMENHANCER_AUTO_REPLY_FROMNAME"
+					description="PLG_SYSTEM_CONTACTFORMENHANCER_AUTO_REPLY_FROMNAME_DESCR"
+				/>
+
+				<field name="autoReplyFromEmail"
+					type="text"
+					default=""
+					label="PLG_SYSTEM_CONTACTFORMENHANCER_AUTO_REPLY_FROMEMAIL"
+					description="PLG_SYSTEM_CONTACTFORMENHANCER_AUTO_REPLY_FROMEMAIL_DESCR"
+				/>
+
+				<field name="autoReplySubject"
+					type="text"
+					default="Re: %FORM_SUBJECT%"
+					label="PLG_SYSTEM_CONTACTFORMENHANCER_AUTO_REPLY_SUBJECT"
+					description="PLG_SYSTEM_CONTACTFORMENHANCER_AUTO_REPLY_SUBJECT_DESCR"
+				/>
+
+				<field name="autoReplyMessage"
+					type="textarea"
+					translate_default="true"
+					default="Your message from %SITE_NAME% has been submitted. We will review it and reply accordingly.&#13;&#10;&#13;&#10;Original message:&#13;&#10;This is an enquiry email via %SITE_URL%&#13;&#10;&#13;&#10;%FORM_MESSAGE%"
+					label="PLG_SYSTEM_CONTACTFORMENHANCER_AUTO_REPLY_MESSAGE"
+					description="PLG_SYSTEM_CONTACTFORMENHANCER_AUTO_REPLY_MESSAGE_DESCR"
+					rows="10"
+					cols="35"
+					filter="raw"
+				/>
+
+
+				<!-- Help -->
 				<field type="spacer"
 					 name="helpSpacer"
 					 label="PLG_SYSTEM_CONTACTFORMENHANCER_HELP"

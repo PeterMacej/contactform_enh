@@ -1,14 +1,14 @@
 <updates>
 	<update>
 		<name>Contact Form Enhancer plugin</name>
-		<description>Plugin for customizing standard contact form email messages.</description>
+		<description>Plugin for customizing standard contact form email messages. Moreover, it removes some limitations and adds auto responder functionality.</description>
 		<element>contactformenhancer</element>
 		<type>plugin</type>
 		<folder>system</folder>
 		<client>0</client>
-		<version>1.0.5</version>
+		<version>1.1.0</version>
 		<downloads>
-			<downloadurl type="full" format="zip">https://github.com/PeterMacej/contactform_enh/releases/download/v1.0.5/plg_contactformenhancer_v1.0.5.zip</downloadurl>
+			<downloadurl type="full" format="zip">https://github.com/PeterMacej/contactform_enh/releases/download/v1.1.0/plg_contactformenhancer_v1.1.0.zip</downloadurl>
 		</downloads>
 		<maintainer>Peter Macej</maintainer>
 		<maintainerurl>http://petermacej.github.io/contactform_enh/</maintainerurl>

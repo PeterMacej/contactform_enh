@@ -6,11 +6,11 @@
  * after it.
  *  
  * Created on October, 2013
- * Modified on April, 2016
+ * Modified on October, 2018
  *
  * @package plg_system_contactformenhancer
  * @author Peter Macej
- * @copyright Copyright (c) 2016 Peter Macej. All rights reserved.
+ * @copyright Copyright (c) 2018 Peter Macej. All rights reserved.
  * @license		GNU General Public License version 2 or later; see LICENSE.txt
  */  
 
@@ -18,20 +18,30 @@
  * @package     Joomla.Site
  * @subpackage  com_contact
  *
- * @copyright   Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2018 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
 defined('_JEXEC') or die;
 
 /**
- * Controller for single contact view.
+ * Controller for single contact view
  *
- * @package     Joomla.Site
- * @subpackage  com_contact
+ * @since  1.5.19
  */
 class ContactControllerContact extends JControllerForm
 {
+	/**
+	 * Method to get a model object, loading it if required.
+	 *
+	 * @param   string  $name    The model name. Optional.
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
+	 *
+	 * @return  JModelLegacy  The model.
+	 *
+	 * @since   1.6.4
+	 */
 	public function getModel($name = '', $prefix = '', $config = array('ignore_request' => true))
 	{
 		return parent::getModel($name, $prefix, array('ignore_request' => false));
@@ -55,7 +65,8 @@ class ContactControllerContact extends JControllerForm
 	public function submit()
 	{
 		// Check for request forgeries.
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		$this->checkToken();
+
 		$app    = JFactory::getApplication();
 		$model  = $this->getModel('contact');
 		$params = JComponentHelper::getParams('com_contact');
@@ -64,7 +75,6 @@ class ContactControllerContact extends JControllerForm
 
 		// Get the data from POST
 		$data  = $this->input->post->get('jform', array(), 'array');
-
 		$contact = $model->getItem($id);
 
 		$params->merge($contact->params);
@@ -72,14 +82,16 @@ class ContactControllerContact extends JControllerForm
 		// Check for a valid session cookie
 		if ($params->get('validate_session', 0))
 		{
-			if (JFactory::getSession()->getState() != 'active'){
-				JError::raiseWarning(403, JText::_('COM_CONTACT_SESSION_INVALID'));
+			if (JFactory::getSession()->getState() !== 'active')
+			{
+				JError::raiseWarning(403, JText::_('JLIB_ENVIRONMENT_SESSION_INVALID'));
 
 				// Save the data in the session.
 				$app->setUserState('com_contact.contact.data', $data);
 
 				// Redirect back to the contact form.
-				$this->setRedirect(JRoute::_('index.php?option=com_contact&view=contact&id='.$stub, false));
+				$this->setRedirect(JRoute::_('index.php?option=com_contact&view=contact&id=' . $stub, false));
+
 				return false;
 			}
 		}
@@ -94,32 +106,30 @@ class ContactControllerContact extends JControllerForm
 		if (!$form)
 		{
 			JError::raiseError(500, $model->getError());
+
 			return false;
 		}
 
-		$validate = $model->validate($form, $data);
-
-		if ($validate === false)
+		if (!$model->validate($form, $data))
 		{
-    
-			// Get the validation messages.
 			$errors	= $model->getErrors();
-			// Push up to three validation messages out to the user.
-			for ($i = 0, $n = count($errors); $i < $n && $i < 3; $i++)
+
+			foreach ($errors as $error)
 			{
-				if ($errors[$i] instanceof Exception)
+				$errorMessage = $error;
+
+				if ($error instanceof Exception)
 				{
-					$app->enqueueMessage($errors[$i]->getMessage(), 'warning');
-				} else {
-					$app->enqueueMessage($errors[$i], 'warning');
+					$errorMessage = $error->getMessage();
 				}
+
+				$app->enqueueMessage($errorMessage, 'error');
 			}
 
-			// Save the data in the session.
 			$app->setUserState('com_contact.contact.data', $data);
 
-			// Redirect back to the contact form.
-			$this->setRedirect(JRoute::_('index.php?option=com_contact&view=contact&id='.$stub, false));
+			$this->setRedirect(JRoute::_('index.php?option=com_contact&view=contact&id=' . $stub, false));
+
 			return false;
 		}
 
@@ -139,9 +149,10 @@ class ContactControllerContact extends JControllerForm
 
 		// Send the email
 		$sent = false;
+
 		if (!$params->get('custom_reply'))
 		{
-			$sent = $this->_sendEmail($data, $contact, $params->get('show_email_copy'));
+			$sent = $this->_sendEmail($data, $contact, $params->get('show_email_copy', 0));
 		}
 
 		// Set the success message if it was a success
@@ -161,9 +172,9 @@ class ContactControllerContact extends JControllerForm
 		if ($contact->params->get('redirect'))
 		{
 			// get contactformenhancer plugin parameters
-	    $plugin = JPluginHelper::getPlugin('system', 'contactformenhancer');
-	    $pluginParams = new JRegistry();
-	    $pluginParams->loadString($plugin->params);
+			$plugin = JPluginHelper::getPlugin('system', 'contactformenhancer');
+			$pluginParams = new JRegistry();
+			$pluginParams->loadString($plugin->params);
 			// supress "Thank you" message
 			if ($pluginParams->get('supressThankYouMessage', '0') == '1') {
 				$msg = null;
@@ -173,14 +184,14 @@ class ContactControllerContact extends JControllerForm
 		}
 		else
 		{
-			$this->setRedirect(JRoute::_('index.php?option=com_contact&view=contact&id='.$stub, false), $msg);
+			$this->setRedirect(JRoute::_('index.php?option=com_contact&view=contact&id=' . $stub, false), $msg);
 		}
 
 		return true;
 	}
 
-
   /**
+	 * Method to get a model object, loading it if required.
 	 *
 	 * @param   array      $data                  The data to send in the email.
 	 * @param   stdClass   $contact               The user information to send the email to
@@ -193,16 +204,18 @@ class ContactControllerContact extends JControllerForm
 	private function _sendEmail($data, $contact, $copy_email_activated)
 	{
   			// get contactformenhancer plugin parameters
-	    $plugin = JPluginHelper::getPlugin('system', 'contactformenhancer');
-	    $pluginParams = new JRegistry();
-	    $pluginParams->loadString($plugin->params);
+			$plugin = JPluginHelper::getPlugin('system', 'contactformenhancer');
+			$pluginParams = new JRegistry();
+			$pluginParams->loadString($plugin->params);
 	
 			$app		= JFactory::getApplication();
+
 			if ($contact->email_to == '' && $contact->user_id != 0)
 			{
 				$contact_user = JUser::getInstance($contact->user_id);
 				$contact->email_to = $contact_user->get('email');
 			}
+
 			$mailfrom	= $app->get('mailfrom');
 			$fromname	= $app->get('fromname');
 			$sitename	= $app->get('sitename');
@@ -221,12 +234,31 @@ class ContactControllerContact extends JControllerForm
 			if ($pluginParams->get('sendCustomEmail', '0') == '0') {
 				// default original format
 				$prefix = JText::sprintf('COM_CONTACT_ENQUIRY_TEXT', JUri::base());
-				$body	= $prefix."\n".$name.' <'.$email.'>'."\r\n\r\n".stripslashes($body);
+				$body   = $prefix . "\n" . $name . ' <' . $email . '>' . "\r\n\r\n" . stripslashes($body);
+
+				// Load the custom fields
+				if (!empty($data['com_fields']) && $fields = FieldsHelper::getFields('com_contact.mail', $contact, true, $data['com_fields']))
+				{
+					$output = FieldsHelper::render(
+						'com_contact.mail',
+						'fields.render',
+						array(
+							'context' => 'com_contact.mail',
+							'item'    => $contact,
+							'fields'  => $fields,
+						)
+					);
+
+					if ($output)
+					{
+						$body .= "\r\n\r\n" . $output;
+					}
+				}
 
 				$mail->addRecipient($contact->email_to);
 				$mail->addReplyTo($email, $name);
 				$mail->setSender(array($mailfrom, $fromname));
-				$mail->setSubject($sitename.': '.$subject);
+				$mail->setSubject($sitename . ': ' . $subject);
 				$mail->setBody($body);
 			} else {
 				// custom format
@@ -238,9 +270,9 @@ class ContactControllerContact extends JControllerForm
 				$cReplyName = $this->processVariables($cReplyName, $name, $email, $subject, $body);
 				$cReplyEmail = $pluginParams->get("customReplytoEmail", "");
 				$cReplyEmail = $this->processVariables($cReplyEmail, $name, $email, $subject, $body);
-        if (trim($cReplyEmail) !== '') {
-				  $mail->addReplyTo($cReplyEmail, $cReplyName);
-        }
+				if (trim($cReplyEmail) !== '') {
+					$mail->addReplyTo($cReplyEmail, $cReplyName);
+				}
 
 				$cFromName = $pluginParams->get("customFromName", "%FORM_NAME%");
 				$cFromName = $this->processVariables($cFromName, $name, $email, $subject, $body);
@@ -258,12 +290,13 @@ class ContactControllerContact extends JControllerForm
 			}
 			$sent = $mail->Send();
 
-			//If we are supposed to copy the sender, do so.
+			// If we are supposed to copy the sender, do so.
 
-      // Check whether email copy function activated
-			if ($copy_email_activated == true && !empty($data['contact_email_copy']))			{
+			// Check whether email copy function activated
+			if ($copy_email_activated == true && !empty($data['contact_email_copy']))
+			{
 				$copytext		= JText::sprintf('COM_CONTACT_COPYTEXT_OF', $contact->name, $sitename);
-				$copytext		.= "\r\n\r\n".$body;
+				$copytext    .= "\r\n\r\n" . $body;
 				$copysubject	= JText::sprintf('COM_CONTACT_COPYSUBJECT_OF', $subject);
 
 				$mail = JFactory::getMailer();
@@ -288,6 +321,27 @@ class ContactControllerContact extends JControllerForm
 					$cBody = $this->processVariables($cBody, $name, $email, $subject, $body);
 					$mail->setBody($cBody);
 				}
+				$sent = $mail->Send();
+			}
+
+			// Send automatic reply, if activated
+			if ($sent && ($pluginParams->get('autoReplyEnabled', '0') == '1'))
+			{
+				$mail = JFactory::getMailer();
+				$mail->addRecipient($email);
+				$cFromName = $pluginParams->get("autoReplyFromName", $fromname);
+				$cFromName = $this->processVariables($cFromName, $name, $email, $subject, $body);
+				$cFromEmail = $pluginParams->get("autoReplyFromEmail", $mailfrom);
+				$cFromEmail = $this->processVariables($cFromEmail, $name, $email, $subject, $body);
+				$mail->setSender(array($cFromEmail, $cFromName));
+
+				$cSubject = $pluginParams->get("autoReplySubject", "Re: %FORM_SUBJECT%");
+				$cSubject = $this->processVariables($cSubject, $name, $email, $subject, $body);
+				$mail->setSubject($cSubject);
+
+				$cBody = $pluginParams->get("autoReplyMessage", "");
+				$cBody = $this->processVariables($cBody, $name, $email, $subject, $body);
+				$mail->setBody($cBody);
 				$sent = $mail->Send();
 			}
 
