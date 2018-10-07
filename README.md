@@ -1,7 +1,7 @@
 # Contact Form Enhancer
 This Joomla plugin extends the functionality of the core contact form behavior. It allows for customizing standard contact form email messages, removing some limitations and adding the auto responder functionality.
 
-<img src="contactform_enh/server/plg_contactformenhancer_scr.png">
+<img src="server/plg_contactformenhancer_scr.png" width="423" height="534">
 
 * You can **customize the email body and headers** that will be sent after the contact form is submitted. You can, for example, completely remove default message text such as "This is an enquiry email via..." or your site name from the subject.
 * You can activate and customize the **automatic reply** to be sent after the form is submitted.
