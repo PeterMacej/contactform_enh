@@ -96,7 +96,7 @@ class plgSystemcontactformenhancerInstallerScript {
 				<strong><?php echo JText::_("PLG_SYSTEM_CONTACTFORMENHANCER_PLUGIN_INSTALLATION_SUCCESSFUL"); ?></strong>
 				<br />
 				<br />
-				<?php echo JText::sprintf(PLG_SYSTEM_CONTACTFORMENHANCER_YOU_NEED_CONFIGURE_PLUGIN , $plugin_id); ?>
+				<?php echo JText::sprintf("PLG_SYSTEM_CONTACTFORMENHANCER_YOU_NEED_CONFIGURE_PLUGIN", $plugin_id); ?>
 			</div>
 			<?php
 		} 		
